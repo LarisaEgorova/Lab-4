@@ -1,0 +1,7 @@
+{
+    "files.associations": { "*.hpp": "cpp", "*.cpp": "cpp" },
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.includePath": ["${workspaceFolder}/include"],
+    "python.terminal.activateEnvironment": false,
+    "files.encoding": "utf8"
+}

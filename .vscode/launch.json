@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Запустить интерфейс",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tasks/main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/tasks"
+        }
+    ]
+}

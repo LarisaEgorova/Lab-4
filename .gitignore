@@ -1,0 +1,24 @@
+# сборка C++
+/build/*
+!/build/.gitkeep
+*.exe
+*.o
+*.obj
+
+# результаты расчётов
+/output/*
+!/output/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+
+# LaTeX (промежуточные)
+*.aux
+*.log
+*.out
+*.toc
+
+# системное
+.DS_Store
+Thumbs.db
