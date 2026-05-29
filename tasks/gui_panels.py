@@ -9,7 +9,7 @@ from matplotlib.backends.backend_tkagg import (
 
 from gui_widgets import COLORS
 
-EPS_TARGET = 0.5e-4
+EPS_TARGET = 0.5e-5
 
 class ParamPanel(ttk.Frame):
     """Левая панель: выбор метода, задачи и всех параметров."""

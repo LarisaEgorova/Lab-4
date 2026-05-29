@@ -30,7 +30,9 @@ void build_rhs(Field& f, const Grid& g, Fn2 frhs);
 
 struct IterStats {
     int    iters = 0;
-    double eps_N = 0.0;
+    double eps_N = 0.0;       // ‖v^N − v^(N−1)‖_∞ — норма шага
+    double rho_est = 0.0;     // наблюдаемый спектральный радиус (running-max отношения шагов)
+    double eps_apost = 0.0;   // апостериорная оценка погрешности: ρ·ε_N/(1−ρ)
     std::string stop;
 };
 

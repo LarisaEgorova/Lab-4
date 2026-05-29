@@ -54,6 +54,9 @@ void build_rhs(Field& f, const Grid& g, Fn2 frhs) {
 
 // (-A)v = F:  a2*v_ij - cx*(v_{i-1,j}+v_{i+1,j}) - cy*(v_{i,j-1}+v_{i,j+1}) = f_ij
 // МВР:  v_ij = (1-w)*v_ij + w*( f_ij + cx*(...) + cy*(...) ) / a2,  Зейдель = w=1.
+// Критерий остановки — апостериорная оценка погрешности (учебник Вержбицкого):
+//   ‖v^N − v*‖_∞ ≤ ρ/(1−ρ) · ‖v^N − v^(N−1)‖_∞.
+// ρ оценивается на лету как running-max отношения соседних шагов после WARMUP итераций.
 IterStats iterate(Field& v, const Field& f, const Grid& g,
                   Method method, double omega,
                   double eps_met, int Nmax) {
@@ -63,8 +66,14 @@ IterStats iterate(Field& v, const Field& f, const Grid& g,
     const double a2 = 2.0 * (cx + cy);
     const double w  = (method == Method::SEIDEL) ? 1.0 : omega;
 
+    const int    WARMUP  = 10;
+    const double RHO_CAP = 0.999999;
+
     IterStats st;
     st.stop = "maxiter";
+
+    double rho_est  = 0.0;
+    double prev_eps = -1.0;
 
     for (int s = 1; s <= Nmax; ++s) {
         double eps_max = 0.0;
@@ -80,12 +89,32 @@ IterStats iterate(Field& v, const Field& f, const Grid& g,
                 if (diff > eps_max) eps_max = diff;
             }
         }
-        // прогресс в Python (stderr); отмена из GUI = kill процесса
-        if (s % 2000 == 0) std::cerr << "ITER:" << s << ":" << eps_max << "\n";
 
-        st.iters = s;
-        st.eps_N = eps_max;
-        if (eps_max < eps_met) { st.stop = "tolerance"; break; }
+        if (prev_eps > 0.0 && eps_max > 0.0) {
+            double r = eps_max / prev_eps;
+            if (r > 0.0 && r < 1.0 && r > rho_est) rho_est = r;
+        }
+        prev_eps = eps_max;
+
+        double rho_used  = std::min(rho_est, RHO_CAP);
+        double eps_apost = (rho_used > 0.0)
+                         ? eps_max * rho_used / (1.0 - rho_used)
+                         : eps_max;
+
+        // прогресс в Python (stderr); отмена из GUI = kill процесса
+        if (s % 2000 == 0) std::cerr << "ITER:" << s << ":" << eps_apost << "\n";
+
+        st.iters    = s;
+        st.eps_N    = eps_max;
+        st.rho_est  = rho_est;
+        st.eps_apost = eps_apost;
+
+        if (eps_max < 1e-15) { st.stop = "tolerance"; break; }
+
+        // основной критерий: апостериорная оценка ниже требуемой точности
+        if (s >= WARMUP && rho_est > 0.0 && eps_apost < eps_met) {
+            st.stop = "tolerance"; break;
+        }
     }
     return st;
 }

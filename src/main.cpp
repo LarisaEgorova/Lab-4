@@ -126,6 +126,8 @@ int main(int argc, char** argv) {
         J.kv("iters", s.st.iters);
         J.kv("stop", s.st.stop);
         J.kv("eps_N", s.st.eps_N);
+        J.kv("rho_est", s.st.rho_est);
+        J.kv("eps_apost", s.st.eps_apost);
         J.kv("residual_inf", s.r_inf);
         J.kv("residual_2", s.r_2);
         J.kv("lambda_min", s.lam_min);
@@ -175,6 +177,8 @@ int main(int argc, char** argv) {
         J.kv("rho_jacobi", sc.rho);
         J.kv("iters", sc.st.iters); J.kv("stop", sc.st.stop);
         J.kv("eps_N", sc.st.eps_N);
+        J.kv("rho_est", sc.st.rho_est);
+        J.kv("eps_apost", sc.st.eps_apost);
         J.kv("residual_inf", sc.r_inf); J.kv("residual_2", sc.r_2);
         J.kv("lambda_min", sc.lam_min); J.kv("z_iter_2", z_iter_2);
         J.kv("fine_n", gf.n); J.kv("fine_m", gf.m);
@@ -182,6 +186,8 @@ int main(int argc, char** argv) {
         J.kv("omega2", sf.omega_used); J.kv("omega2_opt", sf.omega_o);
         J.kv("fine_iters", sf.st.iters); J.kv("fine_stop", sf.st.stop);
         J.kv("fine_eps_N", sf.st.eps_N);
+        J.kv("fine_rho_est", sf.st.rho_est);
+        J.kv("fine_eps_apost", sf.st.eps_apost);
         J.kv("fine_residual_inf", sf.r_inf); J.kv("fine_residual_2", sf.r_2);
         J.kv("fine_lambda_min", sf.lam_min); J.kv("fine_z_iter_2", z_iter_2f);
         J.kv("eps2", eps2);
